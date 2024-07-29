@@ -77,3 +77,35 @@ int _printf(const char *format, ...)
 
     return (count);
 }
+/**
+ * task 2 
+ * print_number - Helper function to print integer numbers
+ * @num: The integer number to print
+ *
+ * Return: The number of characters printed
+ */
+int print_number(int num)
+{
+    char buffer[11];
+    int i = 0, len = 0;
+
+    if (num == 0)
+    {
+        write(1, "0", 1);
+        return (1);
+    }
+
+    while (num != 0)
+    {
+        buffer[i++] = (num % 10) + '0';
+        num /= 10;
+    }
+
+    while (i > 0)
+    {
+        write(1, &buffer[--i], 1);
+        len++;
+    }
+
+    return (len);
+}
