@@ -1,5 +1,5 @@
 #include "main.h"
-#include <unistd.h>  /* Include this for the write function */
+#include <unistd.h>
 
 /**
  * _printf - Produces output according to a format
