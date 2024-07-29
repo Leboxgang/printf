@@ -93,3 +93,48 @@ int _printf(const char *format, ...)
 	va_end(args);
 	return (count);
 }
+/**
+ * print_number - Helper function to print integer numbers
+ * @num: The integer number to print
+ *
+ * Return: The number of characters printer
+ */
+int print_number(int num)
+{
+	int len = 0;
+	unsigned int n;
+	char digit;
+
+	if (num < 0)
+	{
+		write(1, "-", 1);
+		len++;
+		n = -num;
+	}
+	else
+	{
+		n = num;
+	}
+
+	if (n == 0)
+	{
+		write(1, "0", 1);
+		return (1);
+	}
+
+	unsigned int divisor = 1;
+	while (n / divisor >= 10)
+	{
+		divisor *= 10;
+	}
+
+	while (divisor > 0)
+	{
+		digit = (n / divisor % 10) + '0';
+		write(1, &digit, 1);
+		len++;
+		divisor /= 10;
+	}
+
+	return (len);
+}
