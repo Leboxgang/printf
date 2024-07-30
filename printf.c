@@ -99,42 +99,73 @@ int _printf(const char *format, ...)
  *
  * Return: The number of characters printer
  */
-int print_number(int num)
+char *int_to_str(int num)
 {
-	int len = 0;
+	char *str;
+	int len = 0, temp = num;
 	unsigned int n;
-	char digit;
 
+	if (num == 0)
+	{
+		str = malloc(2);
+		if (!str)
+			return (NULL);
+		str[0] = '0';
+		str[1] = '\0';
+		return (str);
+	}
 	if (num < 0)
 	{
-		write(1, "-", 1);
 		len++;
-		n = -num;
+		n = num;
 	}
 	else
 	{
 		n = num;
 	}
-
-	if (n == 0)
+	while (temp != 0)
 	{
-		write(1, "0", 1);
-		return (1);
-	}
-
-	unsigned int divisor = 1;
-	while (n / divisor >= 10)
-	{
-		divisor *= 10;
-	}
-
-	while (divisor > 0)
-	{
-		digit = (n / divisor % 10) + '0';
-		write(1, &digit, 1);
+		temp /= 10;
 		len++;
-		divisor /= 10;
 	}
 
+	str = malloc(len + 1);
+	if (!str)
+		return (NULL);
+	str[len] = '\0';
+
+	while (n != 0)
+	{
+		str[--len] = (n % 10) + '0';
+		n /= 10;
+	}
+	if (num < 0)
+	{
+		str[0] = '-';
+	}
+
+	return (str);
+}
+
+/**
+ * print_number - Prints an integer to stdout
+ * @num: The integer to print
+ *
+ * Return: The number of characters printed.
+ */
+int print_number(int num)
+{
+	char *str = int_to_str(num);
+	int len = 0;
+
+	if (str)
+	{
+		while (str[len])
+		{
+			write(1, &str[len], 1);
+			len++;
+		}
+		free(str);
+	}
 	return (len);
 }
