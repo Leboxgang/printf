@@ -1,66 +1,70 @@
 #include "main.h"
 
-void print_buffer(char buffer[], int *buff_ind);
-
 /**
- * _printf - Printf function
- * @format: format.
- * Return: Printed chars.
+ * _printf - Produces output according to a format
+ * @format: The format string
+ *
+ * Return: The number of characters printed (excluding the null byte)
  */
 int _printf(const char *format, ...)
 {
-	int i, printed = 0, printed_chars = 0;
-	int flags, width, precision, size, buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+    va_list args;
+    int i = 0, count = 0;
+    char c;
+    char *s;
 
-	if (format == NULL)
-		return (-1);
+    if (!format)
+        return (-1);
 
-	va_start(list, format);
+    va_start(args, format);
 
-	for (i = 0; format && format[i] != '\0'; i++)
-	{
-		if (format[i] != '%')
-		{
-			buffer[buff_ind++] = format[i];
-			if (buff_ind == BUFF_SIZE)
-				print_buffer(buffer, &buff_ind);
-			/* write(1, &format[i], 1);*/
-			printed_chars++;
-		}
-		else
-		{
-			print_buffer(buffer, &buff_ind);
-			flags = get_flags(format, &i);
-			width = get_width(format, &i, list);
-			precision = get_precision(format, &i, list);
-			size = get_size(format, &i);
-			++i;
-			printed = handle_print(format, &i, list, buffer,
-				flags, width, precision, size);
-			if (printed == -1)
-				return (-1);
-			printed_chars += printed;
-		}
-	}
+    while (format && format[i])
+    {
+        if (format[i] == '%' && format[i + 1] != '\0')
+        {
+            i++;
+            switch (format[i])
+            {
+                case 'c':
+                    c = (char) va_arg(args, int);
+                    write(1, &c, 1);
+                    count++;
+                    break;
+                case 's':
+                    s = va_arg(args, char *);
+                    if (s)
+                    {
+                        while (*s)
+                        {
+                            write(1, s++, 1);
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                        write(1, "(null)", 6);
+                        count += 6;
+                    }
+                    break;
+                case '%':
+                    write(1, "%", 1);
+                    count++;
+                    break;
+                default:
+                    write(1, "%", 1);
+                    write(1, &format[i], 1);
+                    count += 2;
+                    break;
+            }
+        }
+        else
+        {
+            write(1, &format[i], 1);
+            count++;
+        }
+        i++;
+    }
 
-	print_buffer(buffer, &buff_ind);
-
-	va_end(list);
-
-	return (printed_chars);
-}
-
-/**
- * print_buffer - Prints the contents of the buffer if it exist
- * @buffer: Array of chars
- * @buff_ind: Index at which to add next char, represents the length.
- */
-void print_buffer(char buffer[], int *buff_ind)
-{
-	if (*buff_ind > 0)
-		write(1, &buffer[0], *buff_ind);
-
-	*buff_ind = 0;
+    va_end(args);
+    return (count);
 }
