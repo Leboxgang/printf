@@ -2,9 +2,9 @@
 
 int main(void)
 {
-	_printf("Character: %c\n", 'H');
-	_printf("String: %s\n", "Hello, World!");
-	_printf("Percent: %%\n");
+	_printf("Hello, %s!\n", "World");
+	_printf("Character: %c\n", 'A');
+	_printf("Percentage: %%\n");
 
 	return (0);
 }

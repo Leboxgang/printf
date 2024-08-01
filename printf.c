@@ -1,64 +1,19 @@
-#include <stdarg.h>
-#include <unistd.h>
 #include "main.h"
-#include <stdlib.h>
-
-/**
- * print_char - prints a character
- * @args: list of arguments
- * Return: number of characters printed
- */
-
-int print_char(va_list args)
-{
-	char c = va_arg(args, int);
-
-	write(1, &c, 1);
-	return (1);
-}
-
-/**
- * print_string - prints a string
- * @args: list of arguments
- * Return: number of characters
- */
-
-int print_string(va_list args)
-{
-	char *str = va_arg(args, char *);
-	int count = 0;
-
-	while (*str)
-	{
-		write(1, str++, 1);
-		count++;
-	}
-	return (count);
-}
-
-/**
- * print_percent - print a percent sign
- * @args: list of arguments (unused)
- * Return: numbers of characters printed
- */
-
-int print_percent(__attribute__((unused)) va_list args)
-{
-	write(1, "%", 1);
-	return (1);
-}
 
 /**
  * _printf - produces output according to a format
- * @format: a character string
- * Return: the number o characters printed (excl null byte)
+ * @format: the format string
+ * Return: the number of characters printed (excluding null
+ * used to end output string)
  */
 
+/*main printf function*/
 int _printf(const char *format, ...)
 {
+	int i = 0, count = 0;
+
 	va_list args;
-	int count = 0;
-	int i;
+	char c, *s;
 
 	va_start(args, format);
 
@@ -70,27 +25,58 @@ int _printf(const char *format, ...)
 			switch (format[i])
 			{
 				case 'c':
-					count += print_char(args);
+					c = va_arg(args, int);
+					count += print_char(c);
 					break;
 				case 's':
-					count += print_string(args);
+					s = va_arg(args, char *);
+					count += print_string(s);
 					break;
 				case '%':
-					count += print_percent(args);
+					count += print_char('%');
 					break;
 				default:
-					write(1, &format[i], 1);
-					count++;
+					count += print_char('%');
+					count += print_char(format[i]);
 					break;
 			}
 		}
 		else
 		{
-			write(1, &format[i], 1);
-			count++;
+			count += print_char(format[i]);
 		}
 	}
-
 	va_end(args);
 	return (count);
+}
+
+/**
+ * print_char - prints a single character
+ * @c: the character to print
+ * Return: the number of characters pinted (always 1)
+ */
+
+/*helper function to print a single character*/
+int print_char(char c)
+{
+	return (write(1, &c, 1));
+}
+
+/**
+ * print_string - prints a string
+ * @str: the string to print
+ * Return: the number of characterss printed
+ */
+int print_string(char *str)
+{
+	int i;
+
+	if (str == NULL)
+		str = "(null)"; /*handle null string*/
+	/*iterate through the string and print each character*/
+	for (i = 0; str[i]; i++)
+	{
+		print_char(str[i]);
+	}
+	return (1);
 }
