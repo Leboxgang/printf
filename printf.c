@@ -69,14 +69,14 @@ int print_char(char c)
  */
 int print_string(char *str)
 {
-	int i;
+	int i, count = 0;
 
 	if (str == NULL)
 		str = "(null)"; /*handle null string*/
 	/*iterate through the string and print each character*/
 	for (i = 0; str[i]; i++)
 	{
-		print_char(str[i]);
+		count += print_char(str[i]);
 	}
-	return (1);
+	return (count);
 }
