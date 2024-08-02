@@ -108,11 +108,14 @@ char *uint_to_binary(unsigned int num)
 char *custom_strdup(const char *str)
 {
 	int len = 0;
+
 	while (str[len] != '\0')
 		len++;
 
+
 	char *dup = malloc(len + 1);
 	if (dup == NULL)
+
 		return (NULL);
 
 	for (int i = 0; i <= len; i++)
