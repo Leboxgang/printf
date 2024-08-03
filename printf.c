@@ -1,43 +1,39 @@
 #include "main.h"
 #include <stdio.h>
-#include <stdarg.h>
 
 /**
- * _printf - produces output according to a format
- * @format: the format string
- * Return: the number of characters printed (excluding null
- * used to end output string)
+ * _printf - produces output according to a format.
+ * @format: a character string containing the format directives
+ * Return: the number of characters printed (exclu Null byte)
+ * used to end utput to strings
  */
 
-/*main printf function*/
 int _printf(const char *format, ...)
 {
-	int i = 0, count = 0;
-
 	va_list args;
+	int i, count = 0;
 	char c, *s;
 
 	va_start(args, format);
 
+	/*iterate through the format string*/
 	for (i = 0; format && format[i]; i++)
 	{
 		if (format[i] == '%')
 		{
-			i++;
+			i++; /*move to the next character*/
 			switch (format[i])
 			{
 				case 'c':
-					c = va_arg(args, int);
+					c = va_arg(args, int); /*get char arg*/
 					count += print_char(c);
 					break;
 				case 's':
-					s = va_arg(args, char *);
+					s = va_arg(args, char *); /*print str*/
 					count += print_string(s);
 					break;
 				case '%':
-					count += print_char('%');
-					break;
-				default:
+					/*print '%' and unknwn specifiier*/
 					count += print_char('%');
 					count += print_char(format[i]);
 					break;
@@ -45,7 +41,7 @@ int _printf(const char *format, ...)
 		}
 		else
 		{
-			count += print_char(format[i]);
+			count += print_char(format[i]); /*print reg chars*/
 		}
 	}
 	va_end(args);
@@ -53,32 +49,34 @@ int _printf(const char *format, ...)
 }
 
 /**
- * print_char - prints a single character
- * @c: the character to print
- * Return: the number of characters pinted (always 1)
- */
-
-/*helper function to print a single character*/
-int print_char(char c)
-{
-	return (write(1, &c, 1));
-}
-
-/**
- * print_string - prints a string
- * @str: the string to print
- * Return: the number of characterss printed
+ * print_string - Prints a string.
+ * @str: The string to print.
+ *
+ * Return: The number of characters printed.
  */
 int print_string(char *str)
 {
-	int i, count = 0;
+	int i;
 
 	if (str == NULL)
-		str = "(null)"; /*handle null string*/
-	/*iterate through the string and print each character*/
+		str = "(null)"; /*handle null str*/
+
+	/*iterate through the stirng and pring each character*/
 	for (i = 0; str[i]; i++)
 	{
-		count += print_char(str[i]);
+		print_char(str[i]);
 	}
-	return (count);
+	return (i);
+}
+
+/**
+ * print_char - Prints a single character.
+ * @c: The character to print.
+ *
+ * Return: The number of characters printed (always 1).
+ */
+
+int print_char(char c)
+{
+	return (write(1, &c, 1));
 }
