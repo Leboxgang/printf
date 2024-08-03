@@ -56,7 +56,7 @@ int _printf(const char *format, ...)
  */
 int print_string(char *str)
 {
-	int i;
+	int i, count = 0;
 
 	if (str == NULL)
 		str = "(null)"; /*handle null str*/
@@ -64,9 +64,9 @@ int print_string(char *str)
 	/*iterate through the stirng and pring each character*/
 	for (i = 0; str[i]; i++)
 	{
-		print_char(str[i]);
+		count += print_char(str[i]);
 	}
-	return (i);
+	return (count);
 }
 
 /**
